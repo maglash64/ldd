@@ -24,7 +24,7 @@ static int is_dev_open = 0;
 static struct class* lddclass = NULL;
 static struct device* ldddev = NULL;
 
-static char ldd_msg[256] = "well, hello there..";
+static char ldd_msg[256] = "This is a predefined string from the kernel.";
 static const uint32_t msg_len = 256;
 
 struct file_operations fops = {
@@ -49,8 +49,14 @@ static int dev_release(struct inode *inode, struct file *file)
 
 static ssize_t dev_read(struct file *filep, char *buffer, size_t length, loff_t *offset)
 {
-  if(!copy_to_user(buffer,ldd_msg,length))
+  int len;
+  len = strlen(ldd_msg);
+  if(len > msg_len)
+    len = msg_len;
+  printk(KERN_ALERT "ldd: data is being read.\n");
+  if(!copy_to_user(buffer,ldd_msg,len))
   {
+    printk(KERN_ALERT "ldd: %ld bytes read.\n",length);
     return 0;
   }
   else
@@ -61,7 +67,14 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t length, loff_t 
 
 static ssize_t dev_write(struct file *filep, const char *buffer, size_t length, loff_t *offset)
 {
+  if(length > msg_len)
+  {
+    printk(KERN_ALERT "ldd: data length exceeds buffer length.\n");
+    return -EFAULT;
+  }
+  memset(ldd_msg,0,msg_len);
   copy_from_user(ldd_msg,buffer,length);
+  printk(KERN_ALERT "ldd: %ld bytes written.\n",length);
   return 0;
 }
 
