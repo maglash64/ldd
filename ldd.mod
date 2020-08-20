@@ -1,2 +1,2 @@
-/home/maglash/ldd/ldd.o
+/home/maglash/Work/ldd/ldd.o
 

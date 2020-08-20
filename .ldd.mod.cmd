@@ -1,1 +1,1 @@
-cmd_/home/maglash/ldd/ldd.mod := { echo  /home/maglash/ldd/ldd.o; echo; } > /home/maglash/ldd/ldd.mod
+cmd_/home/maglash/Work/ldd/ldd.mod := { echo  /home/maglash/Work/ldd/ldd.o; echo; } > /home/maglash/Work/ldd/ldd.mod
