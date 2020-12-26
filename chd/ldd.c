@@ -51,13 +51,14 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t length, loff_t 
 {
   int len;
   len = strlen(ldd_msg);
+  printk(KERN_ALERT "msg len: %d",len);
   if(len > msg_len)
     len = msg_len;
   printk(KERN_ALERT "ldd: data is being read.\n");
   if(!copy_to_user(buffer,ldd_msg,len))
   {
-    printk(KERN_ALERT "ldd: %ld bytes read.\n",length);
-    return 0;
+    printk(KERN_ALERT "ldd: %d bytes read.\n",len);
+    return len;
   }
   else
   {

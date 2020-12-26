@@ -22,7 +22,7 @@ __section(.gnu.linkonce.this_module) = {
 MODULE_INFO(retpoline, "Y");
 #endif
 
-MODULE_INFO(depends, "");
+MODULE_INFO(depends, "videodev");
 
 
-MODULE_INFO(srcversion, "FAAC349E263FBFB71E7FCD2");
+MODULE_INFO(srcversion, "7B8B9D3C36F7D2FBED5FB24");
