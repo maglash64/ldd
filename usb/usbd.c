@@ -8,34 +8,41 @@
 
 #define DEVICE_NAME   "usbd0"
 #define DEVICE_CLASS  "usbd"
-#define DEVICE_VID    0x10c4
-#define DEVICE_PID    0xea60
+#define DEVICE_VID    0x0951
+#define DEVICE_PID    0x1666
 
 MODULE_LICENSE("GPL");            
 MODULE_AUTHOR("Ankit Sharma");   
 MODULE_DESCRIPTION("A simple linux usb driver");  
 MODULE_VERSION("0.1");  
 
-static int usbd_probe(struct usb_interface *interface,const struct usb_device_id *id);
 
-static struct usb_driver usbd = {
-  .name   = "usbd",
-  .probe  = usbd_probe,
-};
-
-static struct usb_device_id usbd_table[] = {
+const struct usb_device_id usbd_table[] = {
   {
     USB_DEVICE(DEVICE_VID,DEVICE_PID)
   },{}
 };
 
-MODULE_DEVICE_TABLE(usb,usbd_table);
+MODULE_DEVICE_TABLE (usb, usbd_table);
 
 static int usbd_probe(struct usb_interface *interface,const struct usb_device_id *id)
 {
   printk(KERN_ALERT "USBD PROBE SUCCESS!");
   return 0;
 }
+
+static void usbd_disconnect(struct usb_interface *interface)
+{
+  printk(KERN_ALERT "USBD DISCONNECT SUCCESS!");
+}
+
+static struct usb_driver usbd = {
+  .name   = "usbd",
+  .probe  = usbd_probe,
+  .disconnect = usbd_disconnect,
+  .id_table = usbd_table,
+};
+
 
 static int __init usbd_init(void)
 {
