@@ -16,7 +16,6 @@ MODULE_AUTHOR("Ankit Sharma");
 MODULE_DESCRIPTION("A simple linux usb driver");  
 MODULE_VERSION("0.1");  
 
-
 const struct usb_device_id usbd_table[] = {
   {
     USB_DEVICE(DEVICE_VID,DEVICE_PID)

@@ -15,7 +15,7 @@ MODULE_DESCRIPTION("A simple linux v4l2 driver");
 MODULE_VERSION("0.1");  
 
 static int success = 0;
-struct video_device  *vdev;
+struct video_device  vdev;
 struct v4l2_device    v4l2_dev;
 
 
@@ -51,23 +51,13 @@ static int __init v4l2test_init(void)
     return err;
   }
 
-  vdev = video_device_alloc();
+  sprintf(vdev.name,"v4l2test");
+  vdev.release = video_device_release;
+  vdev.v4l2_dev = &v4l2_dev;
+  vdev.fops = &v4l2_fops;
+  vdev.device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_READWRITE;
 
-  if(vdev == NULL)
-  {
-    printk(KERN_ALERT "error, cannot allocate vdev");
-    err = -ENOMEM; 
-    return err;
-  }
-
-  memset(vdev,0,sizeof(struct video_device));
-
-  sprintf(vdev->name,"v4l2test");
-  vdev->release = video_device_release;
-  vdev->v4l2_dev = &v4l2_dev;
-  vdev->fops = &v4l2_fops;
-
-  err = video_register_device(vdev,VFL_TYPE_GRABBER,-1);
+  err = video_register_device(&vdev,VFL_TYPE_GRABBER,-1);
   if(err)
   {
     v4l2_device_unregister(&v4l2_dev);
