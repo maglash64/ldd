@@ -877,12 +877,6 @@ deps_/home/maglash/Work/ldd/usb/usbd.o := \
   include/linux/projid.h \
   include/uapi/linux/quota.h \
   include/linux/nfs_fs_i.h \
-  include/linux/uaccess.h \
-  arch/x86/include/asm/uaccess.h \
-    $(wildcard include/config/x86/intel/usercopy.h) \
-  arch/x86/include/asm/smap.h \
-  arch/x86/include/asm/extable.h \
-  arch/x86/include/asm/uaccess_64.h \
   include/linux/usb.h \
     $(wildcard include/config/usb/mon.h) \
     $(wildcard include/config/usb/led/trig.h) \
@@ -911,7 +905,13 @@ deps_/home/maglash/Work/ldd/usb/usbd.o := \
   arch/x86/include/asm/irq.h \
   arch/x86/include/asm/sections.h \
   include/asm-generic/sections.h \
+  arch/x86/include/asm/extable.h \
   include/linux/pm_runtime.h \
+  include/linux/uaccess.h \
+  arch/x86/include/asm/uaccess.h \
+    $(wildcard include/config/x86/intel/usercopy.h) \
+  arch/x86/include/asm/smap.h \
+  arch/x86/include/asm/uaccess_64.h \
 
 /home/maglash/Work/ldd/usb/usbd.o: $(deps_/home/maglash/Work/ldd/usb/usbd.o)
 
