@@ -23,8 +23,7 @@ int main() {
 	else
 		cout<<"Device Opened"<<endl;
 
-	unsigned char *data = new unsigned char[4]; //data to write
-	data[0]='a';data[1]='\0';data[2]='c';data[3]='d'; //some dummy values
+	unsigned char *data = new unsigned char[64]; //data to write
 
 	int actual; //used to find out how many bytes were written
 	if(libusb_kernel_driver_active(dev_handle, 0) == 1) { //find out if kernel driver is attached
@@ -49,7 +48,7 @@ int main() {
 
     
 	cout<<"Reading Data..."<<endl;
-	r = libusb_bulk_transfer(dev_handle, (0x81 | LIBUSB_ENDPOINT_IN), data, 2, &actual, 0); //my device's out endpoint was 2, found with trial- the device had 2 endpoints: 2 and 129
+	r = libusb_bulk_transfer(dev_handle, (0x81 | LIBUSB_ENDPOINT_IN), data, 64, &actual, 0); //my device's out endpoint was 2, found with trial- the device had 2 endpoints: 2 and 129
 	if(r == 0 && actual == 2) //we wrote the 4 bytes successfully
 		cout<<"Reading Successful!"<<endl;
 	else

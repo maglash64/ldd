@@ -877,6 +877,16 @@ deps_/home/maglash/Work/ldd/usb/usbd.o := \
   include/linux/projid.h \
   include/uapi/linux/quota.h \
   include/linux/nfs_fs_i.h \
+  include/linux/slab.h \
+    $(wildcard include/config/debug/slab.h) \
+    $(wildcard include/config/failslab.h) \
+    $(wildcard include/config/have/hardened/usercopy/allocator.h) \
+    $(wildcard include/config/slab.h) \
+    $(wildcard include/config/slub.h) \
+    $(wildcard include/config/slob.h) \
+  include/linux/percpu-refcount.h \
+  include/linux/kasan.h \
+    $(wildcard include/config/kasan/generic.h) \
   include/linux/usb.h \
     $(wildcard include/config/usb/mon.h) \
     $(wildcard include/config/usb/led/trig.h) \

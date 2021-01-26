@@ -3,15 +3,32 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/usr/src/linux-headers-5.4.0-59-generic/include",
-                "/usr/src/linux-headers-5.4.0-59-generic/arch/x86/include",
+                "${workspaceFolder}",
+                "/usr/src/linux-headers-5.4.0-62-generic/include",
+                "/usr/src/linux-headers-5.4.0-62-generic/include/uapi",
+                "/usr/src/linux-headers-5.4.0-62-generic/include/generated",
+                "/usr/src/linux-headers-5.4.0-62-generic/arch/x86/include",
+                "/usr/src/linux-headers-5.4.0-62-generic/arch/x86/include/uapi",
+                "/usr/src/linux-headers-5.4.0-62-generic/arch/x86/include/generated"
             ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c11",
-            "cppStandard": "c++14",
-            "intelliSenseMode": "clang-x64"
+            "defines": [
+                "__KERNEL__"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "/usr/src/linux-headers-5.4.0-62-generic/include",
+                    "/usr/src/linux-headers-5.4.0-62-generic/mm",
+                    "/usr/src/linux-headers-5.4.0-62-generic/fs",
+                    "/usr/src/linux-headers-5.4.0-62-generic/kernel"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c89",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4
