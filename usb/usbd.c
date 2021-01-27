@@ -27,13 +27,10 @@ struct usbd_device
   __u8 bulk_out_addr;
 };
 
-static struct usb_driver usbd_driver;
+struct usbd_device *usbd;
 
 static int usbd_open(struct inode *i, struct file *filp)
 {
-  struct usb_interface *interface;
-  interface = usb_find_interface(&usbd_driver,iminor(i));
-  filp->private_data = (struct usbd_device*)usb_get_intfdata(interface);
   return 0;
 }
 
@@ -45,13 +42,9 @@ static int usbd_close(struct inode *i, struct file *filp)
 static ssize_t usbd_read(struct file *filp, char *buff, size_t len, loff_t *off)
 {
   int ret, cnt = 0;
-  struct usbd_device *usbd = NULL;
 
-  usbd = (struct usbd_device*)filp->private_data;
-
-  if(!usbd)
-    return -ENODEV;
-
+  memset(usbd->buffer,0,PACKET_LEN);
+  
   ret = usb_bulk_msg(usbd->dev, usb_rcvbulkpipe(usbd->dev, usbd->bulk_out_addr), usbd->buffer, PACKET_LEN, &cnt, 0);
 
   if (ret)
@@ -59,25 +52,28 @@ static ssize_t usbd_read(struct file *filp, char *buff, size_t len, loff_t *off)
     printk(KERN_ALERT "USBD BULK READ FAILED!, ERR: %d\n", ret);
     return ret;
   }
-  if (copy_to_user(buff, usbd->buffer, (len > PACKET_LEN ? PACKET_LEN : len)))
+
+  if(len > PACKET_LEN)
+    len = PACKET_LEN;
+
+  if (copy_to_user(buff, usbd->buffer, len))
   {
     return -EFAULT;
   }
-  printk(KERN_ALERT "USBD READ %s and %d bytes\n", usbd->buffer, cnt);
+  printk(KERN_ALERT "USBD READ %d bytes\n", cnt);
   return cnt;
 }
 
 static ssize_t usbd_write(struct file *filp, const char *buff, size_t len, loff_t *off)
 {
   int ret, cnt;
-  struct usbd_device *usbd = NULL;
 
-  usbd = (struct usbd_device*)filp->private_data;
+  memset(usbd->buffer,0,PACKET_LEN);
 
-  if(!usbd)
-    return -ENODEV;
+  if(len > PACKET_LEN)
+    len = PACKET_LEN;
 
-  if (copy_from_user(usbd->buffer, buff, (len > PACKET_LEN ? PACKET_LEN : len)))
+  if (copy_from_user(usbd->buffer, buff, len))
   {
     return -EFAULT;
   }
@@ -90,7 +86,7 @@ static ssize_t usbd_write(struct file *filp, const char *buff, size_t len, loff_
     return ret;
   }
 
-  printk(KERN_ALERT "USBD WROTE %s and %d bytes\n", usbd->buffer, cnt);
+  printk(KERN_ALERT "USBD WROTE %d bytes\n",cnt);
   return cnt;
 }
 
@@ -117,13 +113,22 @@ static int usbd_probe(struct usb_interface *interface, const struct usb_device_i
   struct usb_host_interface *iface_desc;
   struct usb_endpoint_descriptor *ep;
 
-  struct usbd_device *usbd;
+  usbd = kzalloc(sizeof(struct usbd_device),GFP_KERNEL);
 
-  usbd = kmalloc(sizeof(struct usbd_device),GFP_KERNEL);
+  if(!usbd)
+  {
+    return -ENOMEM;
+  }
 
   usbd->dev = usb_get_dev(interface_to_usbdev(interface));
   usbd->interface = interface;
   usbd->buffer = kmalloc(PACKET_LEN,GFP_KERNEL);
+
+  if(!usbd->buffer)
+  {
+    kfree(usbd);
+    return -ENOMEM;
+  }
 
   iface_desc = interface->cur_altsetting;
 
@@ -142,11 +147,8 @@ static int usbd_probe(struct usb_interface *interface, const struct usb_device_i
     }
   }
 
-  usb_set_intfdata(interface,&usbd);
-
   if ((ret = usb_register_dev(interface, &usbd_class)) < 0)
   {
-    usb_set_intfdata(interface,NULL);
     kfree(usbd->buffer);
     kfree(usbd);
     printk(KERN_ALERT "USBD PROBE FAILED!, CANNOT REGISTER DEVICE\n");
@@ -161,8 +163,6 @@ static int usbd_probe(struct usb_interface *interface, const struct usb_device_i
 
 static void usbd_disconnect(struct usb_interface *interface)
 {
-  struct usbd_device *usbd;
-  usbd = usb_get_intfdata(interface);
   kfree(usbd->buffer);
   kfree(usbd);
   usb_deregister_dev(interface, &usbd_class);
