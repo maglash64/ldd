@@ -44,7 +44,7 @@ static ssize_t usbd_read(struct file *filp, char *buff, size_t len, loff_t *off)
   int ret, cnt = 0;
 
   memset(usbd->buffer,0,PACKET_LEN);
-  
+
   ret = usb_bulk_msg(usbd->dev, usb_rcvbulkpipe(usbd->dev, usbd->bulk_out_addr), usbd->buffer, PACKET_LEN, &cnt, 0);
 
   if (ret)
@@ -111,6 +111,7 @@ static int usbd_probe(struct usb_interface *interface, const struct usb_device_i
 {
   int i, ret;
   struct usb_host_interface *iface_desc;
+
   struct usb_endpoint_descriptor *ep;
 
   usbd = kzalloc(sizeof(struct usbd_device),GFP_KERNEL);
@@ -123,6 +124,8 @@ static int usbd_probe(struct usb_interface *interface, const struct usb_device_i
   usbd->dev = usb_get_dev(interface_to_usbdev(interface));
   usbd->interface = interface;
   usbd->buffer = kmalloc(PACKET_LEN,GFP_KERNEL);
+
+  printk(KERN_ALERT "device address : %u\n",usbd->dev->devaddr);
 
   if(!usbd->buffer)
   {
@@ -185,6 +188,7 @@ static int __init usbd_init(void)
     printk(KERN_ALERT "error registering : usbd");
     return -1;
   }
+  printk(KERN_ALERT "usbd: HZ-> %d \n",HZ);
   return 0;
 }
 

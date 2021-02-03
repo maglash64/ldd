@@ -1,0 +1,1 @@
+cmd_/home/maglash/Work/ldd/i2c/i2cd.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/maglash/Work/ldd/i2c/i2cd.ko /home/maglash/Work/ldd/i2c/i2cd.o /home/maglash/Work/ldd/i2c/i2cd.mod.o;  true

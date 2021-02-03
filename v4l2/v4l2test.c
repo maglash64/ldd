@@ -9,11 +9,6 @@
 #include <media/v4l2-ioctl.h>
 #include <media/v4l2-device.h>
 
-MODULE_LICENSE("GPL");            
-MODULE_AUTHOR("Ankit Sharma");   
-MODULE_DESCRIPTION("A simple linux v4l2 driver");  
-MODULE_VERSION("0.1");  
-
 static int success = 0;
 struct video_device  vdev;
 struct v4l2_device    v4l2_dev;
@@ -21,13 +16,13 @@ struct v4l2_device    v4l2_dev;
 
 static int v4l2_open(struct file *filp)
 {
-  printk(KERN_ALERT "v4l2test opened.");
+  printk(KERN_ALERT "v4l2test opened.\n");
   return 0;
 }
 
 static int v4l2_release(struct file *filp)
 {
-  printk(KERN_ALERT "v4l2test closed.");
+  printk(KERN_ALERT "v4l2test closed.\n");
   return 0;
 }
 
@@ -79,3 +74,9 @@ static void __exit v4l2test_exit(void)
 
 module_init(v4l2test_init);
 module_exit(v4l2test_exit);
+
+
+MODULE_LICENSE("GPL");            
+MODULE_AUTHOR("Ankit Sharma");   
+MODULE_DESCRIPTION("A simple linux v4l2 driver");  
+MODULE_VERSION("0.1");  
