@@ -12,8 +12,8 @@ static struct i2c_driver *i2cd_driver;
 static int __init i2cd_init(void)
 {
   int result = 0;
-
   return result;
+
 }
 
 static void __exit i2cd_exit(void)
